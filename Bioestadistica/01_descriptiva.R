@@ -13,10 +13,10 @@ library(summarytools)
 # MANIPULACION DE DATOS ----
 
     # Lectura de tabla
-    grd22 <- read_delim("grd22_1000.txt", 
-                         delim = "|", escape_double = FALSE, 
-                         locale = locale(encoding = "UTF-16"), 
-                         trim_ws = TRUE)
+
+    grd22 <- read_delim("grd10000.txt", delim = "|", 
+                    escape_double = FALSE, locale = locale(encoding = "UTF-16"), 
+                    trim_ws = TRUE)
     # Ver tabla
     View(grd22)
     
@@ -79,25 +79,18 @@ library(summarytools)
       scale_fill_manual(values = c("orange", "forestgreen")) +
       labs(title = "", 
            x = "", y = "") +
-      annotate(geom= "text", x = 8, y = 175, label="Source:")
+      annotate(geom= "text", x = 8, y = 175, label="")
     
     # Boxplot
     ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
-      geom_boxplot() +
+      geom_boxplot(outlier.shape = NA) +
       scale_fill_manual(values = c("orange", "forestgreen")) +
       labs(title = "My title", 
            x = "X label", y = "") +
       theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-      annotate(geom= "text", x = 2.75, y = -0.4, label="Source: ")
+      annotate(geom= "text", x = 2.75, y = -0.4, label="") +
+      coord_cartesian(xlim=c(0.7, 0.9))
     
-    
-    # Cumulative frequency
-    ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
-      stat_ecdf() +
-      scale_color_manual(values = c("orange", "forestgreen") ) +      
-      labs(title = "", 
-           x = "X label", y = "") +
-      annotate(geom= "text", x = 2.75, y = 0.01, label="Source: ")
     
 # INTERVALO DE CONFIANZA ----
     
@@ -107,6 +100,6 @@ library(summarytools)
     freq.table    
     ci(mydat$SEXO == "MUJER" )    
 
-# MUESTRA ----
+
     
     
