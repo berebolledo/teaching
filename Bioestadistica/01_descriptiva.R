@@ -54,8 +54,13 @@ library(summarytools)
     write.xlsx(freq.table, "freq.table.xlsx")
     
     # Gráfico de barras para frecuencia absoluta
-
-    ggplot(data = mydat, aes(x = factor(SEXO))) +
+    
+    # Grafico de barras basico
+    ggplot(data = mydat, aes(x = SEXO)) +
+      geom_bar()
+    
+    # Grafico de barras con opciones de estilo
+    ggplot(data = mydat, aes(x = SEXO)) +
       geom_bar(fill = "steelblue") +
       labs(title = "Frecuencia Absoluta de la variable SEXO",
            x = "Sexo",
@@ -69,37 +74,36 @@ library(summarytools)
     tbl_summary(mydat, by = "SEXO", 
                 type = list(IR_29301_PESO ~ 'continuous'),
                 statistic = list(all_continuous() ~ "{mean} ({sd})" ))
-
     
-# PLOTS ------------------------------------------------------------------------
+    # Histogram simple
+        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+          geom_histogram()
     
-    # Histogram        
-    ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
-      geom_histogram(alpha = 0.5, bins = 30, color = "black") +
-      scale_fill_manual(values = c("orange", "forestgreen")) +
-      labs(title = "", 
-           x = "", y = "") +
-      annotate(geom= "text", x = 8, y = 175, label="")
+    # Histograma con mas opciones de estilo
+        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+          geom_histogram(alpha = 0.5, bins = 30, color = "black") +
+          scale_fill_manual(values = c("orange", "forestgreen")) +
+          labs(title = "", x = "", y = "") +
+          annotate(geom= "text", x = 8, y = 175, label="")
     
-    # Boxplot
-    ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
-      geom_boxplot(outlier.shape = NA) +
-      scale_fill_manual(values = c("orange", "forestgreen")) +
-      labs(title = "My title", 
-           x = "X label", y = "") +
-      theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-      annotate(geom= "text", x = 2.75, y = -0.4, label="") +
-      coord_cartesian(xlim=c(0.7, 0.9))
+    # Boxplot Simple
+        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+          geom_boxplot()
+        
+    #Boxplot con mas opciones de estilo
+        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+          geom_boxplot(outlier.shape = NA) +
+          scale_fill_manual(values = c("orange", "forestgreen")) +
+          labs(title = "My title", x = "X label", y = "") +
+          theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
+          annotate(geom= "text", x = 2.75, y = -0.4, label="") +
+          coord_cartesian(xlim=c(0.7, 0.9))
     
     
-# INTERVALO DE CONFIANZA ----
+# INTERVALO DE CONFIANZA -------------------------------------------------------
     
     ci(mydat$IR_29301_PESO, alpha = 0.05)
     ci(mydat$IR_29301_PESO, alpha = 0.01)
     
     freq.table    
     ci(mydat$SEXO == "MUJER" )    
-
-
-    
-    
