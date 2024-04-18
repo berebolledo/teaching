@@ -21,7 +21,8 @@ library(summarytools)
     View(grd22)
     
     # Arreglar columna IR_29301_PESO para que sea numerica
-    grd22$IR_29301_PESO <- as.numeric(gsub(",", ".", grd22$IR_29301_PESO))
+    grd22$IR_29301_PESO <- gsub(",", ".", grd22$IR_29301_PESO)
+    grd22$IR_29301_PESO <- as.numeric(grd22$IR_29301_PESO)
     
     # Calcular edad como la diferencia de fecha de nacimiento e ingreso
     grd22$EDAD <- (as.Date(grd22$FECHA_INGRESO) - as.Date(grd22$FECHA_NACIMIENTO))/365
