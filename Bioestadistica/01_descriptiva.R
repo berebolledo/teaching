@@ -14,8 +14,8 @@ library(summarytools)
 
     # Lectura de tabla
 
-    grd22 <- read_delim("grd10000.txt", delim = "|", 
-                    escape_double = FALSE, locale = locale(encoding = "UTF-16"), 
+    grd22 <- read_delim("grd22_10000.txt", delim = "|", 
+                    escape_double = FALSE, 
                     trim_ws = TRUE)
     # Ver tabla
     View(grd22)
@@ -23,18 +23,28 @@ library(summarytools)
     # Arreglar columna IR_29301_PESO para que sea numerica
     grd22$IR_29301_PESO <- as.numeric(gsub(",", ".", grd22$IR_29301_PESO))
     
+    # Calcular edad como la diferencia de fecha de nacimiento e ingreso
+    grd22$EDAD <- (as.Date(grd22$FECHA_INGRESO) - as.Date(grd22$FECHA_NACIMIENTO))/365
+    grd22$EDAD <- as.numeric(grd22$EDAD)
+    grd22$EDAD <- round(grd22$EDAD,1)
+    
+    # Calculo de dias de hospitalizacion
+    grd22$DIASHOSP <- as.Date(grd22$FECHAALTA) - as.Date(grd22$FECHA_INGRESO)
+    grd22$DIASHOSP <- as.numeric(grd22$DIASHOSP)
+    
     # Ejemplo de seleccion de variables
-    grd22 %>% select(SEXO, ETNIA, TIPO_INGRESO, DIAGNOSTICO1, IR_29301_PESO)
+    dat <- grd22 %>% select(SEXO, EDAD, ETNIA, TIPO_INGRESO, DIAGNOSTICO1, IR_29301_PESO, DIASHOSP)
+    View(dat)
     
     # Ejemplo de filtrado por condicion
-    grd22 %>% filter(TIPO_INGRESO == "URGENCIA")
+    dat %>% filter(TIPO_INGRESO == "URGENCIA")
     
     # Ejemplo: Solo las filas con CIE10 K35.XX
-    grd22 %>% filter(grepl("K35\\.[0-9]*", grd22$DIAGNOSTICO1))
+    dat %>% filter(grepl("K35\\.[0-9]*", grd22$DIAGNOSTICO1))
     
     # Selecciona, filtra y guarda en un nuevo archivo
-    mydat <- grd22 %>% 
-      select(SEXO, ETNIA, TIPO_INGRESO, DIAGNOSTICO1,IR_29301_PESO) %>%
+    mydat <- dat %>% 
+      select(SEXO, EDAD, ETNIA, TIPO_INGRESO, DIAGNOSTICO1,IR_29301_PESO, DIASHOSP) %>%
       filter(grepl("K35\\.[0-9]*", grd22$DIAGNOSTICO1))
     
     write.csv(mydat, "mydat.csv", row.names = FALSE)
@@ -76,34 +86,31 @@ library(summarytools)
                 statistic = list(all_continuous() ~ "{mean} ({sd})" ))
     
     # Histogram simple
-        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+        ggplot(data = mydat, aes(x = EDAD)) + 
           geom_histogram()
     
     # Histograma con mas opciones de estilo
-        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+        ggplot(data = mydat, aes(x = EDAD, fill = SEXO)) + 
           geom_histogram(alpha = 0.5, bins = 30, color = "black") +
-          scale_fill_manual(values = c("orange", "forestgreen")) +
           labs(title = "", x = "", y = "") +
-          annotate(geom= "text", x = 8, y = 175, label="")
+          annotate(geom= "text", x = 8, y = 40, label="")
     
     # Boxplot Simple
-        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+        ggplot(data = mydat, aes(x = EDAD)) + 
           geom_boxplot()
         
     #Boxplot con mas opciones de estilo
-        ggplot(data = mydat, aes(x = IR_29301_PESO, fill = SEXO)) + 
+        ggplot(data = mydat, aes(x = EDAD, fill = SEXO)) + 
           geom_boxplot(outlier.shape = NA) +
-          scale_fill_manual(values = c("orange", "forestgreen")) +
           labs(title = "My title", x = "X label", y = "") +
           theme(axis.text.y = element_blank(), axis.ticks.y = element_blank()) +
-          annotate(geom= "text", x = 2.75, y = -0.4, label="") +
-          coord_cartesian(xlim=c(0.7, 0.9))
+          annotate(geom= "text", x = 2.75, y = -0.4, label="") 
     
     
 # INTERVALO DE CONFIANZA -------------------------------------------------------
     
-    ci(mydat$IR_29301_PESO, alpha = 0.05)
-    ci(mydat$IR_29301_PESO, alpha = 0.01)
+    ci(mydat$EDAD, alpha = 0.05)
+    ci(mydat$EDAD, alpha = 0.01)
     
     freq.table    
     ci(mydat$SEXO == "MUJER" )    
