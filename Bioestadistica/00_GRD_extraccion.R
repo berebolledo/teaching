@@ -3,14 +3,17 @@ library(readr)
 # DIAGNOSTICO 1-35 variables 54-88
 # PROCEDIMIENTO 1-30 variables 89-118
 
-grd_extract <- function(df, diag, proc, date){
-  d <- read_delim(df, delim = "|", escape_double = FALSE, trim_ws = TRUE)
+grd_extract <- function(file, diag, proc1, proc2, date){
+  d <- read_delim(file, delim = "|", escape_double = FALSE, trim_ws = TRUE)
   
   getDiag <- apply(d[, 54:88], 1, FUN = function(x) as.logical(sum(grepl(diag,x))))
   dDiag <- d[getDiag,]
   
-  getProc <- apply(dDiag[,89:118], 1, FUN = function(x) as.logical(sum(grepl(proc,x))))
-  dfinal <- dDiag[getProc,]
+  getProc1 <- apply(dDiag[,89:118], 1, FUN = function(x) as.logical(sum(grepl(proc1,x))))
+  dfProc1 <- dDiag[getProc1,]
+  
+  getProc2 <- apply(dfProc1[,89:118], 1, FUN = function(x) as.logical(sum(grepl(proc2,x))))
+  dfinal <- dfProc1[getProc2,]
   
   dfinal$fecha_grd <- rep(date, nrow(dfinal))
   
@@ -20,12 +23,13 @@ grd_extract <- function(df, diag, proc, date){
 
 pat1 <- "C32"
 pat2 <- "30\\.[12349]|31\\.[129]"
+pat3 <- "96\\.6$|99\\.15$"
 
 
-grd22_C32_30_31 <- grd_extract("GRD_PUBLICO_2022-v2.txt", pat1, pat2, 2022)
-grd21_C32_30_31 <- grd_extract("GRD_PUBLICO_2021.txt", pat1, pat2, 2021)
-grd20_C32_30_31 <- grd_extract("GRD_PUBLICO_2020.txt", pat1, pat2, 2020)
-grd19_C32_30_31 <- grd_extract("GRD_PUBLICO_2019.txt", pat1, pat2, 2019)
+grd22 <- grd_extract("GRD_PUBLICO_2022-v2.txt", pat1, pat2, pat3, 2022)
+grd21 <- grd_extract("GRD_PUBLICO_2021.txt", pat1, pat2, pat3, 2021)
+grd20 <- grd_extract("GRD_PUBLICO_2020.txt", pat1, pat2, pat3, 2020)
+grd19 <- grd_extract("GRD_PUBLICO_2019.txt", pat1, pat2, pat3, 2019)
 
-olivia <- rbind(grd19_C32_30_31, grd20_C32_30_31, grd21_C32_30_31, grd22_C32_30_31)
-write.table(olivia, "olivia.grd.txt", sep = "|", row.names = FALSE)
+olivia <- rbind(grd19, grd20, grd21, grd22)
+write.table(olivia, "olivia-3-filtros.grd.txt", sep = "|", row.names = FALSE)
