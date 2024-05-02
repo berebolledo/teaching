@@ -45,7 +45,8 @@ malignos = df['Diagnosis'] == "M"
 df[malignos]
 
 filtro2 = df['Radius_mean'] > 20
-df[malignos & filtro2]
+df[malignos & filtro2][['Diagnosis', 'Radius_mean']]
+
 
 # Reemplazar valores
 df['Diagnosis'] = df['Diagnosis'].replace({'M': 'Malignant', 'B': 'Benign'})
@@ -94,4 +95,10 @@ plt.xlabel("Radious CV")
 plt.ylabel("Frequency")
 
 sns.boxplot(data = df, x = "Diagnosis", y="Radius_mean" )
+
+
+sns.scatterplot(x='Radius_mean', y='Area_mean', hue='Diagnosis', data=df)
+plt.title('Relación entre Radio Medio y Área Media por Diagnóstico')
+plt.xlabel('Radio Medio')
+plt.ylabel('Área Media')
 
