@@ -10,10 +10,10 @@ Created on Fri Apr 26 16:27:12 2024
 print("Hola Mundo")
 
 # Variables y tipos de datos
-entero = 5
-decimal = 3.14
-texto = "Curso de Python"
-booleano = True
+entero = 5 #integer
+decimal = 3.14 #float
+texto = "Curso de Python" #string
+booleano = True #boolean
 
 # Mostrar los valores y tipos
 print(type(entero), entero)
@@ -22,10 +22,10 @@ print(type(texto), texto)
 print(type(booleano), booleano)
 
 # Operaciones aritméticas
-suma = 5 + 3
-resta = 5 - 3
+suma           = 5 + 3
+resta          = 5 - 3
 multiplicacion = 5 * 3
-division = 5 / 3
+division       = 5 / 3
 
 # Mostrar resultados
 print("Suma:", suma)
@@ -37,8 +37,18 @@ print("División:", division)
 saludo = "Hola " + "Mundo"
 print(saludo)
 
+print('\t'.join(  ["Hola", "Mundo", "Estoy", "Bien"] ))
+
+
+
 # Lista de números
 numeros = [1, 2, 3, 4, 5]
+
+uno_como_string = str(1)
+uno_como_string
+
+''.join(numeros)
+''.join([str(i) for i in numeros])
 
 # Imprimir cada número usando un bucle for
 for numero in numeros:
@@ -108,3 +118,45 @@ def min_max_elementos(nums):
 numeros = (50, 10, 30, 40, 20)
 minimo, maximo = min_max_elementos(numeros)
 print("Mínimo:", minimo, "Máximo:", maximo)
+
+# -------------------------------------------------------------------------
+
+
+L1 = ['a', 'b', 'c', 'd']
+L2 = [1,2]
+
+L1.append(1)
+L1.extend(L2) 
+L1.remove('a')
+L1.reverse()
+L1
+
+T1 = ('a', 'b', 'c', 'd')
+T1.index('c')
+
+estudiante['nombre']
+estudiante['altura']
+
+bioinfo = {"camila": {"notas":"camila"}, "profesor":{"nombre":"boris"} }
+
+bioinfo["estudiante"]["nombre"]
+
+bioinfo["asistente"] = {"nombre":"cancino"}
+
+
+for key,value in bioinfo.items():
+    print(key)
+
+
+nombres = ["nombre1", "nombre2"]
+edades = [23, 35]
+
+dict(zip(nombres, edades))
+
+
+
+
+
+
+
+

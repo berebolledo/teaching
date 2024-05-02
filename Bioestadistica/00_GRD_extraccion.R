@@ -25,11 +25,15 @@ pat1 <- "C32"
 pat2 <- "30\\.[12349]|31\\.[129]"
 pat3 <- "96\\.6$|99\\.15$"
 
+pat1 <- "C16.*B98\\.[0-9]"
+pat2 <- "*"
+pat3 <- "*"
 
 grd22 <- grd_extract("GRD_PUBLICO_2022-v2.txt", pat1, pat2, pat3, 2022)
 grd21 <- grd_extract("GRD_PUBLICO_2021.txt", pat1, pat2, pat3, 2021)
 grd20 <- grd_extract("GRD_PUBLICO_2020.txt", pat1, pat2, pat3, 2020)
 grd19 <- grd_extract("GRD_PUBLICO_2019.txt", pat1, pat2, pat3, 2019)
 
-olivia <- rbind(grd19, grd20, grd21, grd22)
-write.table(olivia, "olivia-3-filtros.grd.txt", sep = "|", row.names = FALSE)
+output <- "mateo-2-filtros.grd.txt"
+merge <- rbind(grd19, grd20, grd21, grd22)
+write.table(merge, output, sep = "|", row.names = FALSE)
