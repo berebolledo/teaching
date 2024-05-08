@@ -5,7 +5,27 @@ Created on Thu May  2 11:29:28 2024
 
 @author: boris
 """
+# FUNCIONES -------------------------------------------------------------------
 
+def saludo():
+    s = 'Hola, bienvenide'
+    return(s)
+
+
+def saludo(nombre):
+    s = 'Hola ' + nombre + ', bienvenide'
+    return(s)
+
+
+def saludo(nombre = 'Antonio'):
+    s = 'Hola ' + nombre + ', bienvenide'
+    return(s)
+
+def sumar(a, b):
+    resultado = a + b 
+    return(resultado)
+
+# PANDAS ----------------------------------------------------------------------
 import pandas as pd
 df = pd.read_csv("FDC_Dataframe_nonCP_genome_05Abril.csv")
 
@@ -17,7 +37,24 @@ df.tail()
 # Acceso a columnas
 df['TOTAL_SUM']
 df.columns
-list(df.columns)
+
+
+listado = list(df.columns)
+rango = range(len(listado))
+
+columnas_numeradas = list(zip(rango, listado))
+
+for t in columnas_numeradas:
+    if t[1] == 'SHV_SUM':
+        print(t[0])
+
+
+column_indexes = {col: idx for idx, col in enumerate(df.columns)}
+column_indexes
+column_indexes['SHV_SUM']
+
+
+
 df[['NARROW_SUM', 'TOTAL_SUM']]
 
 # Acceso a filas con indice numerico
@@ -42,14 +79,18 @@ df = pd.read_csv("09_csv_format_example.csv")
 
 # Filtrar por una condicion
 malignos = df['Diagnosis'] == "M"
+
 df[malignos]
 
 filtro2 = df['Radius_mean'] > 20
+
+
 df[malignos & filtro2][['Diagnosis', 'Radius_mean']]
+df[malignos | filtro2][['Diagnosis', 'Radius_mean']]
 
 
 # Reemplazar valores
-df['Diagnosis'] = df['Diagnosis'].replace({'M': 'Malignant', 'B': 'Benign'})
+df['Diagnosis2'] = df['Diagnosis'].replace({'M': 'Malignant', 'B': 'Benign'})
 
 # Concatenacion
 df1 = df.head()
@@ -58,6 +99,7 @@ df_concatenado = pd.concat([df1, df2])
 
 # Guardar
 df_concatenado.to_csv("output.csv", index = False)
+
 
 # Operaciones matematicas por columnas
 df['Diagnosis'].value_counts()
@@ -78,6 +120,7 @@ df.groupby('Diagnosis')['Perimeter_mean'].agg(['min', 'max', 'mean'])
 
 # Generar otra columna a partir de la operacion de columnas
 df_corto = df.loc[:,['Diagnosis', 'Radius_mean', 'Radius_se']]
+
 df_corto['Radius_cv'] = df_corto['Radius_se'] / df_corto['Radius_mean']
 
 # Ordenar de menor a mayor
@@ -101,4 +144,17 @@ sns.scatterplot(x='Radius_mean', y='Area_mean', hue='Diagnosis', data=df)
 plt.title('Relación entre Radio Medio y Área Media por Diagnóstico')
 plt.xlabel('Radio Medio')
 plt.ylabel('Área Media')
+
+
+-------------------------------------------------------------------------------
+
+
+bd = {'estudiante': {'nombre':'camila', 'nacto':1995}, 
+      'profesor':{'nombre': 'boris', 'nacto':1986}}
+
+for key in bd.keys():
+    bd[key]['edad'] = 
+
+
+
 
