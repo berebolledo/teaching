@@ -21,8 +21,10 @@ grd_extract <- function(file, diag, proc1, proc2, date){
 }
 
 # Olivia
-pat1 <- "I35"
-pat2 <- "35\\.2|35\\.96|35\\.0$|35\\.01$"
+pat1 <- "I35\\.0$|I35\\.2$|I06\\.0$|I06\\.2$"
+pat2 <- "35\\.05|35\\.2"
+pat3 <- "39\\.61$|37\\.8$|36\\.06$|36\\.07$"
+pat2 <- "*"
 pat3 <- "*"
 
 # Patricia
@@ -35,7 +37,7 @@ grd21 <- grd_extract("GRD_PUBLICO_2021.txt", pat1, pat2, pat3, 2021)
 grd20 <- grd_extract("GRD_PUBLICO_2020.txt", pat1, pat2, pat3, 2020)
 grd19 <- grd_extract("GRD_PUBLICO_2019.txt", pat1, pat2, pat3, 2019)
 
-output <- "20240507_olivia.txt"
+output <- "20240510_I35_o_I06_olivia.txt"
 merge <- rbind(grd19, grd20, grd21, grd22)
 
 # Patricia
@@ -54,7 +56,5 @@ merge$DIASHOSP <- as.numeric(merge$DIASHOSP)
 
 write.table(merge, output, sep = "|", row.names = FALSE)
 
-
-table(merge$SEXO)
-
-
+library(openxlsx)
+write.xlsx(merge, "20240510_I35_o_I06_olivia.xlsx")
