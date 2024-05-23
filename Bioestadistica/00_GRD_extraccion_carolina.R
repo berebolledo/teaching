@@ -1,53 +1,46 @@
+# Ambiente de trabajo
 library(ggplot2)
-
-file <- "GRD_PUBLICO_2022-v2.txt"
-
-df <- read_delim(file, delim = "|", escape_double = FALSE, trim_ws = TRUE)
-df <- subset(df, SEXO != "DESCONOCIDO")
-
-df$IR_29301_PESO <- gsub(",", ".", df$IR_29301_PESO)
-df$IR_29301_PESO <- as.numeric(df$IR_29301_PESO)
-
-df$EDAD <- as.Date(df$FECHA_INGRESO) - as.Date(df$FECHA_NACIMIENTO)
-df$EDAD <- as.numeric(df$EDAD)/365
-df$EDAD <- round(df$EDAD,0)
-
-df$DIASHOSP <- as.Date(df$FECHAALTA) - as.Date(df$FECHA_INGRESO)
-df$DIASHOSP <- as.numeric(df$DIASHOSP)
-
-# Crear intervalos de cinco años
-df$GRUPO_EDAD <- cut(df$EDAD, breaks = seq(0, 105, by = 5), right = FALSE, include.lowest = TRUE)
-
-# Contar las frecuencias por grupo de edad y sexo
 library(dplyr)
 
-df_freq <- df %>%
+# Lectura de datos
+file <- "GRD_PUBLICO_2019.txt"
+d <- read_delim(file, delim = "|", escape_double = FALSE, trim_ws = TRUE)
+
+# Eliminacion de registros de sexo desconocido
+d <- subset(d, SEXO != "DESCONOCIDO")
+
+# Ajuste del valor de peso grd
+d$IR_29301_PESO <- gsub(",", ".", d$IR_29301_PESO)
+d$IR_29301_PESO <- as.numeric(d$IR_29301_PESO)
+
+# Creacion de la variable EDAD
+d$EDAD <- as.Date(d$FECHA_INGRESO) - as.Date(d$FECHA_NACIMIENTO)
+d$EDAD <- as.numeric(d$EDAD)/365
+d$EDAD <- round(d$EDAD,0)
+
+# Creacion de la variable DIAS DE HOSPITALIZACION
+d$DIASHOSP <- as.Date(d$FECHAALTA) - as.Date(d$FECHA_INGRESO)
+d$DIASHOSP <- as.numeric(d$DIASHOSP)
+
+# Crear intervalos de cinco años
+d$GRUPO_EDAD <- cut(d$EDAD, breaks = seq(0, 105, by = 5), right = FALSE, include.lowest = TRUE)
+
+# Contar las frecuencias por grupo de edad y sexo
+d_freq <- d %>%
   group_by(GRUPO_EDAD, SEXO) %>%
   summarise(FRECUENCIA = n()) %>%
   ungroup()
 
-# Separar por sexo
-df_hombres <- df_freq %>% filter(SEXO == "HOMBRE")
-df_mujeres <- df_freq %>% filter(SEXO == "MUJER")
-
-# Hacer los valores negativos para los hombres
-df_hombres$FRECUENCIA <- -df_hombres$FRECUENCIA
-
-# Combinar los DataFrames
-df_combined <- full_join(df_hombres, df_mujeres, by = "GRUPO_EDAD", suffix = c("_HOMBRES", "_MUJERES"))
-
-# Rellenar NAs con 0
-df_combined <- df_combined[complete.cases(df_combined),]
+# Eliminar celdas sin informacion
+d_freq <- d_freq[complete.cases(d_freq),]
 
 # Crear el gráfico
-ggplot(df_combined) +
-  geom_bar(aes(x = GRUPO_EDAD, y = FRECUENCIA_HOMBRES), stat = "identity", fill = "blue", alpha = 0.7) +
-  geom_bar(aes(x = GRUPO_EDAD, y = FRECUENCIA_MUJERES), stat = "identity", fill = "red", alpha = 0.7) +
+ggplot(d_freq) +
+  geom_bar(aes(GRUPO_EDAD,FRECUENCIA,group=SEXO,fill=SEXO),stat = "identity", subset(d_freq, d_freq$SEXO=="MUJER")) +
+  geom_bar(aes(GRUPO_EDAD,-FRECUENCIA,group=SEXO,fill=SEXO),stat = "identity", subset(d_freq, d_freq$SEXO=="HOMBRE")) +
   coord_flip() +
-  labs(title = "Pirámide de Edad por Sexo",
+  labs(title = "Pirámide de Edad por Sexo GRD 2019",
        x = "Grupo de Edad",
        y = "Frecuencia") +
   theme_minimal() +
   scale_y_continuous(labels = abs) 
-
-

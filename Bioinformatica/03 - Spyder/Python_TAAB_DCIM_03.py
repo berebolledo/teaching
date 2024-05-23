@@ -58,7 +58,7 @@ mic_clean_float['consistencia'] = mic_clean_float.apply(consistencia, 1 )
 
 mic_clean_float['inconsistent MIC'] = df['inconsistent MIC']
 
-mic_clean_float.to_csv("mic_clean_float", index = False)
+mic_clean_float.to_csv("mic_clean_float.csv", index = False)
 
 
 
