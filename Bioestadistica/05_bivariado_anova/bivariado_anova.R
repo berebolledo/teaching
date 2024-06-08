@@ -33,8 +33,7 @@ ggplot(data = diet, aes(x = Diet, y = weightchange, fill = Diet)) +
 
 #    III. Normality
 
-aggregate(x = diet$weightchange, by = list(diet$Diet), FUN = function(x) shapiro.test(x)$p.value )
-
+by(data = diet$weightchange, INDICES = diet$Diet, FUN = shapiro.test)
 
 #    IV. Homoscedasticity
 
@@ -79,7 +78,10 @@ ggplot(data = grd, aes(x = PREVISION, y = EDAD, fill = PREVISION)) +
   geom_boxplot()
 
 # Test de normalidad
-aggregate(x = grd$EDAD, by = list(grd$PREVISION), FUN = function(x) shapiro.test(x)$p.value )
+by(data = grd$EDAD, INDICES = grd$PREVISION, FUN = shapiro.test )
+
+# Test de homocedasticidad
+bartlett.test(EDAD ~ PREVISION, data = grd)
 
 # ANOVA no parametrica
 kruskal <- kruskal.test(EDAD ~ PREVISION, data = grd)

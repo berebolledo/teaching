@@ -82,7 +82,7 @@ library(summarytools)
     
     # Ejemplo. Crea una tabla con las estimaciones
     
-    tbl_summary(mydat, by = "SEXO", 
+    tbl_summary(mydat, 
                 type = list(IR_29301_PESO ~ 'continuous'),
                 statistic = list(all_continuous() ~ "{mean} ({sd})" ))
     
