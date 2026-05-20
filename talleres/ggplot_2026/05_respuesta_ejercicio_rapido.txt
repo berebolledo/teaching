@@ -1,0 +1,6 @@
+# 🖊️ Tu código aquí:
+
+ggplot(data = indo_clean, aes(x = risk, fill = sexo)) +
+  geom_histogram( bins = 10, position = "identity", color = "white") +
+  labs(x = "Puntaje de riesgo", y = "Número de pacientes", fill = "Sexo",
+  title = "Distribución de riesgo")

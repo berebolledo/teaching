@@ -279,6 +279,7 @@ ggplot(cor_long, aes(x = var1, y = var2, fill = r)) +
   theme(axis.text.x = element_text(angle = 40, hjust = 1, size = 9),
         axis.text.y = element_text(size = 9))
 
+# Ejercicio 3.3 · Panel multipanel para publicación
 # Panel A: Densidad de edad por grupo
 p_A <- ggplot(indo_clean, aes(x = age, fill = tratamiento)) +
   geom_density(alpha = 0.55) +
